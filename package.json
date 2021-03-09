@@ -1,0 +1,13 @@
+{
+  "name": "ar-babylon",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "babylonjs": "^4.2.0",
+    "babylonjs-loaders": "^4.2.0"
+  }
+}
