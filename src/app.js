@@ -1,8 +1,9 @@
-import { CreateScene, LoadGLTF } from './CreateComponent.js';
+import { CreateScene, LoadGLTF, LoadSky } from './CreateComponent.js';
 
 
-var { Engine, Scene } = CreateScene();
+var { Engine, Scene } = await CreateScene();
 LoadGLTF();
+LoadSky();
 
 Engine.runRenderLoop(function(){
     Scene.render();

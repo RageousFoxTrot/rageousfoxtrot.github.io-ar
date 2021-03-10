@@ -36,7 +36,7 @@ eval("!function(e,t){ true?module.exports=t():0}(\"undefined\"!=typeof self?self
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"CreateScene\": () => (/* binding */ CreateScene),\n/* harmony export */   \"LoadGLTF\": () => (/* binding */ LoadGLTF)\n/* harmony export */ });\n/* harmony import */ var babylonjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! babylonjs */ \"./node_modules/babylonjs/babylon.js\");\n/* harmony import */ var babylonjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(babylonjs__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var babylonjs_loaders__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! babylonjs-loaders */ \"./node_modules/babylonjs-loaders/babylonjs.loaders.min.js\");\n/* harmony import */ var babylonjs_loaders__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(babylonjs_loaders__WEBPACK_IMPORTED_MODULE_1__);\n\r\n\r\n\r\nlet canvas, engine, scene, camera;\r\nlet light, model;\r\n\r\nfunction CreateScene() {\r\n    canvas = document.querySelector('canvas');\r\n    engine = new babylonjs__WEBPACK_IMPORTED_MODULE_0__.Engine(canvas, true, {preserveDrawingBuffer: true, stencil: true});\r\n    scene = new babylonjs__WEBPACK_IMPORTED_MODULE_0__.Scene(engine);\r\n    camera = new babylonjs__WEBPACK_IMPORTED_MODULE_0__.FreeCamera('camera1', new babylonjs__WEBPACK_IMPORTED_MODULE_0__.Vector3(20, 20, -10), scene);\r\n    camera.setTarget(babylonjs__WEBPACK_IMPORTED_MODULE_0__.Vector3.Zero());\r\n    camera.attachControl(canvas, false);\r\n\r\n    light = new babylonjs__WEBPACK_IMPORTED_MODULE_0__.HemisphericLight('light1', new babylonjs__WEBPACK_IMPORTED_MODULE_0__.Vector3(0, 1, 0), scene);\r\n\r\n    return { \r\n        Canvas: canvas,\r\n        Engine: engine,\r\n        Scene:  scene,\r\n        Camera: camera,\r\n        Light:  light,\r\n        Model:  model\r\n    };\r\n}\r\n\r\nfunction LoadGLTF() {\r\n    babylonjs_loaders__WEBPACK_IMPORTED_MODULE_1__.GLTFFileLoader.IncrementalLoading = false;\r\n    babylonjs_loaders__WEBPACK_IMPORTED_MODULE_1__.GLTFFileLoader.HomogeneousCoordinates = true;\r\n\r\n    babylonjs__WEBPACK_IMPORTED_MODULE_0__.SceneLoader.AppendAsync('./', 'models/building.glb', scene)\r\n    .then(data => {\r\n        console.log(data);\r\n        model = data;\r\n    }).catch(err => console.error(err));\r\n\r\n    return { \r\n        Canvas: canvas,\r\n        Engine: engine,\r\n        Scene:  scene,\r\n        Camera: camera,\r\n        Light:  light,\r\n        Model:  model\r\n    };\r\n}\n\n//# sourceURL=webpack://ar-babylon/./src/CreateComponent.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"CreateScene\": () => (/* binding */ CreateScene),\n/* harmony export */   \"LoadGLTF\": () => (/* binding */ LoadGLTF),\n/* harmony export */   \"LoadSky\": () => (/* binding */ LoadSky)\n/* harmony export */ });\n/* harmony import */ var babylonjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! babylonjs */ \"./node_modules/babylonjs/babylon.js\");\n/* harmony import */ var babylonjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(babylonjs__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var babylonjs_loaders__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! babylonjs-loaders */ \"./node_modules/babylonjs-loaders/babylonjs.loaders.min.js\");\n/* harmony import */ var babylonjs_loaders__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(babylonjs_loaders__WEBPACK_IMPORTED_MODULE_1__);\n\r\n\r\n\r\n/** @type {HTMLCanvasElement} */\r\nlet canvas;\r\n/** @type {Engine} */\r\nlet engine;\r\n/** @type {Scene} */\r\nlet scene;\r\n/** @type {DeviceOrientationCamera} */\r\nlet camera;\r\n\r\n/** @type {HemisphericLight} */\r\nlet light;\r\n/** @type {Scene} */\r\nlet model;\r\n\r\nasync function CreateScene() {\r\n    await LoadPolyfill();\r\n    babylonjs__WEBPACK_IMPORTED_MODULE_0__.WebXRSessionManager.IsSessionSupportedAsync('immersive-vr');\r\n\r\n    canvas = document.querySelector('canvas');\r\n    engine = new babylonjs__WEBPACK_IMPORTED_MODULE_0__.Engine(canvas, true, {preserveDrawingBuffer: true, stencil: true});\r\n    scene = new babylonjs__WEBPACK_IMPORTED_MODULE_0__.Scene(engine);\r\n    scene.collisionsEnabled = true;\r\n    new babylonjs__WEBPACK_IMPORTED_MODULE_0__.Mesh.CreateGround('ground', 50, 50, 50, scene, false);\r\n\r\n    camera = new babylonjs__WEBPACK_IMPORTED_MODULE_0__.DeviceOrientationCamera('camera', new babylonjs__WEBPACK_IMPORTED_MODULE_0__.Vector3(0, 2.25, 1.25), scene);\r\n    camera.checkCollisions = true;\r\n    camera.rotation.y = Math.PI;\r\n    camera.attachControl(canvas, true);\r\n\r\n    light = new babylonjs__WEBPACK_IMPORTED_MODULE_0__.HemisphericLight('light1', new babylonjs__WEBPACK_IMPORTED_MODULE_0__.Vector3(0, 1, 0), scene);\r\n\r\n    InitializeXR();\r\n\r\n    return { \r\n        Canvas: canvas,\r\n        Engine: engine,\r\n        Scene:  scene,\r\n        Camera: camera,\r\n        Light:  light,\r\n        Model:  model\r\n    };\r\n}\r\n\r\nfunction LoadGLTF() {\r\n    babylonjs_loaders__WEBPACK_IMPORTED_MODULE_1__.GLTFFileLoader.IncrementalLoading = false;\r\n    babylonjs_loaders__WEBPACK_IMPORTED_MODULE_1__.GLTFFileLoader.HomogeneousCoordinates = true;\r\n\r\n    babylonjs__WEBPACK_IMPORTED_MODULE_0__.SceneLoader.AppendAsync('./', 'models/building.glb', scene) \r\n    .then(data => {\r\n        model = data;\r\n    }).catch(err => console.error(err));\r\n\r\n    return { \r\n        Canvas: canvas,\r\n        Engine: engine,\r\n        Scene:  scene,\r\n        Camera: camera,\r\n        Light:  light,\r\n        Model:  model\r\n    };\r\n}\r\n\r\nfunction LoadSky() {\r\n    const skyBox = babylonjs__WEBPACK_IMPORTED_MODULE_0__.MeshBuilder.CreateBox('skyBox', { size: 150 }, scene);\r\n    const skyMat = new babylonjs__WEBPACK_IMPORTED_MODULE_0__.StandardMaterial('skyBox', scene);\r\n    skyMat.backFaceCulling = false;\r\n    skyMat.reflectionTexture = new babylonjs__WEBPACK_IMPORTED_MODULE_0__.CubeTexture('res/', scene,);\r\n    skyMat.reflectionTexture.coordinatesMode = babylonjs__WEBPACK_IMPORTED_MODULE_0__.Texture.SKYBOX_MODE;\r\n    skyMat.diffuseColor = babylonjs__WEBPACK_IMPORTED_MODULE_0__.Color3.Black();\r\n    skyMat.specularColor = babylonjs__WEBPACK_IMPORTED_MODULE_0__.Color3.Black();\r\n    skyBox.material = skyMat;\r\n}\r\n\r\nasync function LoadPolyfill() {\r\n    return await new Promise(resolve => {\r\n        if (navigator.xr) return resolve();\r\n\r\n        define('polyfill', [ 'https://cdn.jsdelivr.net/npm/webxr-polyfill@latest/build/webxr-polyfill.js' ], polyfill => {\r\n            new polyfill();\r\n            resolve();\r\n        });\r\n    });\r\n}\r\n\r\nasync function InitializeXR() {\r\n    const xr = await scene.createDefaultXRExperienceAsync();\r\n\r\n    xr.input.onControllerAddedObservable.add(_ => console.log('Input', _));\r\n}\n\n//# sourceURL=webpack://ar-babylon/./src/CreateComponent.js?");
 
 /***/ }),
 
@@ -44,10 +44,10 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /*!********************!*\
   !*** ./src/app.js ***!
   \********************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _CreateComponent_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CreateComponent.js */ \"./src/CreateComponent.js\");\n\r\n\r\n\r\nvar { Engine, Scene } = (0,_CreateComponent_js__WEBPACK_IMPORTED_MODULE_0__.CreateScene)();\r\n(0,_CreateComponent_js__WEBPACK_IMPORTED_MODULE_0__.LoadGLTF)();\r\n\r\nEngine.runRenderLoop(function(){\r\n    Scene.render();\r\n});\r\n\r\nwindow.addEventListener('resize', function(){\r\n    Engine.resize();\r\n});\n\n//# sourceURL=webpack://ar-babylon/./src/app.js?");
+eval("__webpack_require__.a(module, async (__webpack_handle_async_dependencies__) => {\n__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _CreateComponent_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CreateComponent.js */ \"./src/CreateComponent.js\");\n\r\n\r\n\r\nvar { Engine, Scene } = await (0,_CreateComponent_js__WEBPACK_IMPORTED_MODULE_0__.CreateScene)();\r\n(0,_CreateComponent_js__WEBPACK_IMPORTED_MODULE_0__.LoadGLTF)();\r\n(0,_CreateComponent_js__WEBPACK_IMPORTED_MODULE_0__.LoadSky)();\r\n\r\nEngine.runRenderLoop(function(){\r\n    Scene.render();\r\n});\r\n\r\nwindow.addEventListener('resize', function(){\r\n    Engine.resize();\r\n});\n__webpack_handle_async_dependencies__();\n}, 1);\n\n//# sourceURL=webpack://ar-babylon/./src/app.js?");
 
 /***/ })
 
@@ -77,6 +77,82 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Cre
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/async module */
+/******/ 	(() => {
+/******/ 		var webpackThen = typeof Symbol === "function" ? Symbol("webpack then") : "__webpack_then__";
+/******/ 		var webpackExports = typeof Symbol === "function" ? Symbol("webpack exports") : "__webpack_exports__";
+/******/ 		var completeQueue = (queue) => {
+/******/ 			if(queue) {
+/******/ 				queue.forEach(fn => fn.r--);
+/******/ 				queue.forEach(fn => fn.r-- ? fn.r++ : fn());
+/******/ 			}
+/******/ 		}
+/******/ 		var completeFunction = fn => !--fn.r && fn();
+/******/ 		var queueFunction = (queue, fn) => queue ? queue.push(fn) : completeFunction(fn);
+/******/ 		var wrapDeps = (deps) => (deps.map((dep) => {
+/******/ 			if(dep !== null && typeof dep === "object") {
+/******/ 				if(dep[webpackThen]) return dep;
+/******/ 				if(dep.then) {
+/******/ 					var queue = [], result;
+/******/ 					dep.then((r) => {
+/******/ 						obj[webpackExports] = r;
+/******/ 						completeQueue(queue);
+/******/ 						queue = 0;
+/******/ 					});
+/******/ 					var obj = { [webpackThen]: (fn, reject) => { queueFunction(queue, fn); dep.catch(reject); } };
+/******/ 					return obj;
+/******/ 				}
+/******/ 			}
+/******/ 			return { [webpackThen]: (fn) => { completeFunction(fn); }, [webpackExports]: dep };
+/******/ 		}));
+/******/ 		__webpack_require__.a = (module, body, hasAwait) => {
+/******/ 			var queue = hasAwait && [];
+/******/ 			var exports = module.exports;
+/******/ 			var currentDeps;
+/******/ 			var outerResolve;
+/******/ 			var reject;
+/******/ 			var isEvaluating = true;
+/******/ 			var nested = false;
+/******/ 			var whenAll = (deps, onResolve, onReject) => {
+/******/ 				if (nested) return;
+/******/ 				nested = true;
+/******/ 				onResolve.r += deps.length;
+/******/ 				deps.map((dep, i) => {
+/******/ 					dep[webpackThen](onResolve, onReject);
+/******/ 				});
+/******/ 				nested = false;
+/******/ 			};
+/******/ 			var promise = new Promise((resolve, rej) => {
+/******/ 				reject = rej;
+/******/ 				outerResolve = () => {
+/******/ 					resolve(exports);
+/******/ 					completeQueue(queue);
+/******/ 					queue = 0;
+/******/ 				};
+/******/ 			});
+/******/ 			promise[webpackExports] = exports;
+/******/ 			promise[webpackThen] = (fn, rejectFn) => {
+/******/ 				if (isEvaluating) { return completeFunction(fn); }
+/******/ 				if (currentDeps) whenAll(currentDeps, fn, rejectFn);
+/******/ 				queueFunction(queue, fn);
+/******/ 				promise.catch(rejectFn);
+/******/ 			};
+/******/ 			module.exports = promise;
+/******/ 			body((deps) => {
+/******/ 				if(!deps) return outerResolve();
+/******/ 				currentDeps = wrapDeps(deps);
+/******/ 				var fn, result;
+/******/ 				var promise = new Promise((resolve, reject) => {
+/******/ 					fn = () => (resolve(result = currentDeps.map(d => d[webpackExports])))
+/******/ 					fn.r = 0;
+/******/ 					whenAll(currentDeps, fn, reject);
+/******/ 				});
+/******/ 				return fn.r ? promise : result;
+/******/ 			}).then(outerResolve, reject);
+/******/ 			isEvaluating = false;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	(() => {
 /******/ 		// getDefaultExport function for compatibility with non-harmony modules
