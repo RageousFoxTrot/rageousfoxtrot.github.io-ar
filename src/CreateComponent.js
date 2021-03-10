@@ -1,4 +1,4 @@
-import { Engine, Scene, DeviceOrientationCamera, Vector3, HemisphericLight, SceneLoader, WebXRSessionManager, Mesh, StandardMaterial, CubeTexture, Texture, Color3, MeshBuilder } from 'babylonjs';
+import { Engine, Scene, FreeCamera, Vector3, HemisphericLight, SceneLoader, WebXRSessionManager, StandardMaterial, CubeTexture, Texture, Color3, MeshBuilder } from 'babylonjs';
 import { GLTFFileLoader } from 'babylonjs-loaders';
 
 /** @type {HTMLCanvasElement} */
@@ -7,7 +7,7 @@ let canvas;
 let engine;
 /** @type {Scene} */
 let scene;
-/** @type {DeviceOrientationCamera} */
+/** @type {FreeCamera} */
 let camera;
 
 /** @type {HemisphericLight} */
@@ -23,9 +23,8 @@ export async function CreateScene() {
     engine = new Engine(canvas, true, {preserveDrawingBuffer: true, stencil: true});
     scene = new Scene(engine);
     scene.collisionsEnabled = true;
-    new Mesh.CreateGround('ground', 50, 50, 50, scene, false);
 
-    camera = new DeviceOrientationCamera('camera', new Vector3(0, 2.25, 1.25), scene);
+    camera = new FreeCamera('camera', new Vector3(0, 2.25, 1.25), scene);
     camera.checkCollisions = true;
     camera.rotation.y = Math.PI;
     camera.attachControl(canvas, true);
@@ -86,7 +85,10 @@ async function LoadPolyfill() {
 }
 
 async function InitializeXR() {
-    const xr = await scene.createDefaultXRExperienceAsync();
+    const env = scene.createDefaultEnvironment();
+    const xr = await scene.createDefaultXRExperienceAsync({
+        floorMeshes: [ env.ground ]
+    });
 
     xr.input.onControllerAddedObservable.add(_ => console.log('Input', _));
 }
