@@ -67,7 +67,7 @@ export function LoadSky() {
     const skyBox = MeshBuilder.CreateBox('skyBox', { size: 150 }, scene);
     const skyMat = new StandardMaterial('skyBox', scene);
     skyMat.backFaceCulling = false;
-    skyMat.reflectionTexture = new CubeTexture('./res/', scene);
+    skyMat.reflectionTexture = new CubeTexture('https://raw.githubusercontent.com/RageousFoxTrot/rageousfoxtrot.github.io/master/res/', scene);
     skyMat.reflectionTexture.coordinatesMode = Texture.SKYBOX_MODE;
     skyMat.diffuseColor = Color3.Black();
     skyMat.specularColor = Color3.Black();
